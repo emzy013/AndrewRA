@@ -13,7 +13,7 @@ from selenium.webdriver.support.select import Select
 ##################################### CONSTANTS ######################################
 URL = "https://guides.lib.uwo.ca/az.php?q=factiva"                                   #
 USER = "USERNAME"                                                                    #
-PASS = "PASSWORD!"                                                                   #
+PASS = "PASSWORD"                                                                   #
 USER_XPATH = "/html/body/center[2]/div/form/p[1]/input"                              #
 PASS_XPATH = "/html/body/center[2]/div/form/p[3]/input"                              #
 LOGIN_XPATH = "/html/body/center[2]/div/form/p[4]/input"                             #
@@ -119,3 +119,4 @@ def getFactivaSearchResults(search_text):
 
 if __name__ == "__main__":
     results = getFactivaSearchResults("rst=sfprn AND la=en AND date from 16/04/2009 to 01/07/2009 AND tech* AND co=JPM")
+    print(results)
