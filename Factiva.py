@@ -12,8 +12,8 @@ from selenium.webdriver.support.select import Select
 
 ##################################### CONSTANTS ######################################
 URL = "https://guides.lib.uwo.ca/az.php?q=factiva"                                   #
-USER = "arinald4"                                                                    #
-PASS = "Hockeyrocks4!"                                                               #
+USER = "USERNAME"                                                                    #
+PASS = "PASSWORD!"                                                                   #
 USER_XPATH = "/html/body/center[2]/div/form/p[1]/input"                              #
 PASS_XPATH = "/html/body/center[2]/div/form/p[3]/input"                              #
 LOGIN_XPATH = "/html/body/center[2]/div/form/p[4]/input"                             #
