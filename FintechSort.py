@@ -1,5 +1,7 @@
+from numpy.core.defchararray import count
 import pandas as pd
 import numpy as np
+from pandas.errors import EmptyDataError
 
 def getBreakdown(identifier):
     counts = {
@@ -100,7 +102,16 @@ def getBreakdown(identifier):
         "lending club"
     ]
 
-    currFile = pd.read_csv("..//articles//"+identifier+".csv",header=None,index_col=None)
+    try:
+        currFile = pd.read_csv("..//articles//"+identifier+".csv",header=None,index_col=None)
+    except FileNotFoundError:
+        print("Empty File.")
+        return(counts)
+    except EmptyDataError:
+        print("Empty File.")
+        return(counts)
+    
+
     currFile = currFile.iloc[[0,1],:]
 
     for i in range(currFile.shape[1]):
@@ -108,20 +119,18 @@ def getBreakdown(identifier):
         
         # check for text matching one of the fintech categories
         result_scores = {
-        "General Fintech": np.mean([x in currArticle.lower() for x in generalFintech]),
-        "Contract (Blockchain)":np.mean([x in currArticle.lower() for x in contract]),
-        "Decision (AI)": np.mean([x in currArticle.lower() for x in decision]),
-        "RegTech": np.mean([x in currArticle.lower() for x in regTech]),
-        "WealthTech": np.mean([x in currArticle.lower() for x in wealthTech]),
-        "InsurTech": np.mean([x in currArticle.lower() for x in insurTech]),
-        "Payments": np.mean([x in currArticle.lower() for x in payments]),
-        "Lending": np.mean([x in currArticle.lower() for x in lending])
+        "General Fintech": sum([x in currArticle.lower() for x in generalFintech]),
+        "Contract (Blockchain)": sum([x in currArticle.lower() for x in contract]),
+        "Decision (AI)": sum([x in currArticle.lower() for x in decision]),
+        "RegTech": sum([x in currArticle.lower() for x in regTech]),
+        "WealthTech": sum([x in currArticle.lower() for x in wealthTech]),
+        "InsurTech": sum([x in currArticle.lower() for x in insurTech]),
+        "Payments": sum([x in currArticle.lower() for x in payments]),
+        "Lending": sum([x in currArticle.lower() for x in lending])
         }
-        highScore = max(result_scores.values())
-        if highScore == 0:
-            continue
+        
         for key,val in result_scores.items():
-            if val == highScore:
+            if val > 0 :
                 counts[key] += 1
         
     return(counts)
@@ -134,9 +143,9 @@ if __name__ == "__main__":
     master = master.loc[master["Assigned"] == 1,:]
 
     for i in range(master.shape[0]):
-        ticker = master["Ticker"].iloc[i]
-        year = master["Year"].iloc[i]
-        quarter = master["Quarter"].iloc[i]
+        ticker = str(master["Ticker"].iloc[i])
+        year = str(master["Year"].iloc[i])
+        quarter = str(master["Quarter"].iloc[i])
 
         file = ticker+"_"+year+"Q"+quarter
 
@@ -150,9 +159,8 @@ if __name__ == "__main__":
         master.iloc[i,12]= breakdown["InsurTech"]
         master.iloc[i,13]= breakdown["Payments"]
         master.iloc[i,14]= breakdown["Lending"]
+        print(file)
+        print(breakdown)
     
     print(master)
-
-    
-
-
+    master.to_csv("RESULT.csv")
